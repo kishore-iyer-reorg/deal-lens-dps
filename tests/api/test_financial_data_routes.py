@@ -22,7 +22,7 @@ async def test_create_financial_data(clear_db):
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.post("/financial_data/", json=data)
+        response = await ac.post("/api/financial_data/", json=data)
     
     # Verify response
     assert response.status_code == status.HTTP_201_CREATED
@@ -51,7 +51,7 @@ async def test_create_financial_data_with_composite_value(clear_db):
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.post("/financial_data/", json=data)
+        response = await ac.post("/api/financial_data/", json=data)
     
     # Verify response
     assert response.status_code == status.HTTP_201_CREATED
@@ -82,7 +82,7 @@ async def test_create_financial_data_with_greater_of_value(clear_db):
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.post("/financial_data/", json=data)
+        response = await ac.post("/api/financial_data/", json=data)
     
     # Verify response
     assert response.status_code == status.HTTP_201_CREATED
@@ -111,7 +111,7 @@ async def test_create_financial_data_with_percentage_multiple(clear_db):
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.post("/financial_data/", json=data)
+        response = await ac.post("/api/financial_data/", json=data)
     
     # Verify response
     assert response.status_code == status.HTTP_201_CREATED
@@ -139,7 +139,7 @@ async def test_create_financial_data_with_names_list(clear_db):
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.post("/financial_data/", json=data)
+        response = await ac.post("/api/financial_data/", json=data)
     
     # Verify response
     assert response.status_code == status.HTTP_201_CREATED
@@ -166,7 +166,7 @@ async def test_create_financial_data_with_financial_ratio(clear_db):
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.post("/financial_data/", json=data)
+        response = await ac.post("/api/financial_data/", json=data)
     
     # Verify response
     assert response.status_code == status.HTTP_201_CREATED
@@ -197,7 +197,7 @@ async def test_create_financial_data_with_percentage_condition(clear_db):
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.post("/financial_data/", json=data)
+        response = await ac.post("/api/financial_data/", json=data)
     
     # Verify response
     assert response.status_code == status.HTTP_201_CREATED
@@ -220,7 +220,7 @@ async def test_get_all_financial_data(clear_db, create_test_data):
     
     # Now test the GET all endpoint
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.get("/financial_data/")
+        response = await ac.get("/api/financial_data/")
     
     # Verify response
     assert response.status_code == status.HTTP_200_OK
@@ -240,7 +240,7 @@ async def test_get_financial_data_by_id(clear_db, create_test_data):
     
     # Now test the GET by ID endpoint
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.get(f"/financial_data/{test_record.id}")
+        response = await ac.get(f"/api/financial_data/{test_record.id}")
     
     # Verify response
     assert response.status_code == status.HTTP_200_OK
@@ -260,7 +260,7 @@ async def test_get_financial_data_by_id_not_found(clear_db):
     
     # Test the GET by ID endpoint
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.get(f"/financial_data/{non_existent_id}")
+        response = await ac.get(f"/api/financial_data/{non_existent_id}")
     
     # Verify response
     assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -281,7 +281,7 @@ async def test_update_financial_data(clear_db, create_test_data):
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.put(f"/financial_data/{test_record.id}", json=update_data)
+        response = await ac.put(f"/api/financial_data/{test_record.id}", json=update_data)
     
     # Verify response
     assert response.status_code == status.HTTP_200_OK
@@ -308,7 +308,7 @@ async def test_update_financial_data_not_found(clear_db):
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.put(f"/financial_data/{non_existent_id}", json=update_data)
+        response = await ac.put(f"/api/financial_data/{non_existent_id}", json=update_data)
     
     # Verify response
     assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -322,14 +322,14 @@ async def test_delete_financial_data(clear_db, create_test_data):
     
     # Now test the DELETE endpoint
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.delete(f"/financial_data/{test_record.id}")
+        response = await ac.delete(f"/api/financial_data/{test_record.id}")
     
     # Verify response
     assert response.status_code == status.HTTP_204_NO_CONTENT
     
     # Verify the record is gone by trying to get it
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        verify_response = await ac.get(f"/financial_data/{test_record.id}")
+        verify_response = await ac.get(f"/api/financial_data/{test_record.id}")
     
     assert verify_response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -342,7 +342,7 @@ async def test_delete_financial_data_not_found(clear_db):
     
     # Test the DELETE endpoint
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.delete(f"/financial_data/{non_existent_id}")
+        response = await ac.delete(f"/api/financial_data/{non_existent_id}")
     
     # Verify response
     assert response.status_code == status.HTTP_404_NOT_FOUND
@@ -364,7 +364,7 @@ async def test_pagination_get_all_financial_data(clear_db):
     
     # Test pagination with limit=2, offset=1
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.get("/financial_data/?limit=2&offset=1")
+        response = await ac.get("/api/financial_data/?limit=2&offset=1")
     
     # Verify response
     assert response.status_code == status.HTTP_200_OK
@@ -386,7 +386,7 @@ async def test_create_financial_data_with_invalid_data(clear_db):
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.post("/financial_data/", json=data)
+        response = await ac.post("/api/financial_data/", json=data)
     
     # Verify response
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -417,7 +417,7 @@ async def test_update_financial_data_with_complex_fields(clear_db, create_test_d
     }
     
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        response = await ac.put(f"/financial_data/{test_record.id}", json=update_data)
+        response = await ac.put(f"/api/financial_data/{test_record.id}", json=update_data)
     
     # Verify response
     assert response.status_code == status.HTTP_200_OK

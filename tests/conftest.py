@@ -2,27 +2,46 @@
 Test fixtures and configuration for pytest
 """
 import os
+import asyncio
 import pytest
 from fastapi.testclient import TestClient
 from tortoise import Tortoise
-from tortoise.contrib.test import finalizer, initializer
+from tortoise.contrib.test import finalizer
 
-from app.main import app
+from app.main import app, TORTOISE_ORM
 from app.models.financial_data import FinancialData
 
 
+# Override the event_loop fixture to use the same loop for all tests in the session
+@pytest.fixture(scope="session")
+def event_loop():
+    """Create an instance of the default event loop for each test case."""
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
+
+
 @pytest.fixture(scope="session", autouse=True)
-def initialize_tests():
+async def initialize_tests():
     """Initialize test database and create schemas"""
-    # Set up a test database
-    db_url = os.environ.get("TEST_DATABASE_URL", "sqlite://:memory:")
-    initializer(["app.models.financial_data"], db_url=db_url)
+    # Use an in-memory SQLite database for tests
+    TEST_DB_URL = "sqlite://:memory:"
+    
+    # Configure Tortoise ORM with the test database
+    test_config = TORTOISE_ORM.copy()
+    test_config["connections"]["default"] = TEST_DB_URL
+    
+    # Initialize Tortoise ORM
+    await Tortoise.init(config=test_config)
+    
+    # Create schema
+    await Tortoise.generate_schemas(safe=True)
     
     # Return control
     yield
     
     # Cleanup
-    finalizer()
+    await Tortoise.close_connections()
 
 
 @pytest.fixture(scope="function")

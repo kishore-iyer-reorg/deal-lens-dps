@@ -123,7 +123,7 @@ async def update_financial_data(record_id: int, data: FinancialDataModel):
     
     # Update basic fields
     record.boolean_value = data.boolean_value
-    record.term_sheet_status = data.term_sheet_status.value if data.term_sheet_status else None
+    record.term_sheet_status = data.term_sheet_status
     record.numeric_value = data.numeric_value
     record.date_value = data.date_value
     
