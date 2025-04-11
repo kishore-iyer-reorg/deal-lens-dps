@@ -122,6 +122,34 @@ The API supports complex financial data structures with various composite value 
 
 See the API documentation for detailed schema information and examples.
 
+## Running Tests
+
+The project uses pytest for testing. To run tests:
+
+### Using Docker
+
+```bash
+docker-compose exec web pytest
+```
+
+### Local Development
+
+```bash
+# Run all tests
+pytest
+
+# Run specific test files
+pytest tests/models/test_financial_data.py
+pytest tests/api/test_financial_data_routes.py
+
+# Run tests with verbose output
+pytest -v
+```
+
+Tests are organized into:
+- Model tests: Testing database models and CRUD operations
+- API tests: Testing HTTP endpoints with FastAPI TestClient
+
 ## License
 
 MIT
